@@ -30,36 +30,32 @@
     </div>
 
     <script>
-        // 새로고침 없이 데이터를 가져오는 마법 (AJAX/Fetch)
         async function getNext() {
-            const response = await fetch('/get_data');
-            const data = await response.json();
+            try {
+                const response = await fetch('/get_data');
+                const data = await response.json();
             
-            document.getElementById('verse').innerText = `"${data.verse}"`;
-            document.getElementById('ref').innerText = `- ${data.ref}`;
+                // 말씀이랑 출처 넣기
+                document.getElementById('verse').innerText = data.verse;
+                document.getElementById('ref').innerText = data.ref;
             
-            // 유튜브 영상 교체
-            async function getNext() {
-    const response = await fetch('/get_data');
-    const data = await response.json();
-    
-    document.getElementById('verse').innerText = `"${data.verse}"`;
-    document.getElementById('ref').innerText = `- ${data.ref}`;
-    
-    // 현재 내 사이트 주소를 가져와서 유튜브한테 "나 나쁜 놈 아니야"라고 알려줌
-    const currentUrl = window.location.origin;
-    const playerDiv = document.getElementById('player');
-    
-    playerDiv.innerHTML = `
-        <iframe 
-            width="100%" 
-            height="250" 
-            src="https://www.youtube.com/embed/${data.youtube_id}?autoplay=0&rel=0&origin=${currentUrl}" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-        </iframe>`;
-}
-    </script>
+                // 유튜브 영상 넣기
+                const playerDiv = document.getElementById('player');
+                playerDiv.innerHTML = `
+                    <iframe 
+                        width="100%" 
+                        height="250" 
+                        src="https://www.youtube.com/embed/${data.youtube_id}" 
+                        frameborder="0" 
+                        allowfullscreen>
+                    </iframe>`;
+            } catch (e) {
+                console.error("에러 발생!", e);
+                alert("뜌땨땨! 데이터 가져오기 실패!");
+        }
+    }
+    // 페이지 처음 열릴 때 한 번 실행!
+    window.onload = getNext;
+</script>
 </body>
 </html>
