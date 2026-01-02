@@ -6,13 +6,14 @@ import random
 template_dir = os.path.abspath('templates')
 app = Flask(__name__, template_folder=template_dir)
 
-# 찬송가 리스트 (형님이 좋아하는 유튜브 ID 더 추가해도 됨!)
+# 찬송가 리스트 (형님이 좋아하는 유튜브 ID 더 추가해도 됨!야르 ㅋㅋㅋㅋㅋㅋㅋ)
+# 검증된 '퍼가기 허용' 찬송가 ID 리스트
 HYMN_LIST = [
-    "M_Tj730I-vA", # 은혜
-    "8X8W9_vH2vA", # 원하고 바라고 기도합니다
-    "r-99uH9vC_w", # 꽃들도
-    "wM7id6NTo68", # 손경민-행복
-    "3_vE7Y3R9l8"  # 시간을 뚫고
+    "DCPv_I63rlo", # 원하고 바라고 기도합니다
+    "68vU_W3AByE", # 꽃들도
+    "BySTFpGvX9k", # 시간을 뚫고
+    "vAnOxl_W1fQ", # 은혜 (손경민)
+    "K4p7_hLzOos"  # 행복
 ]
 
 @app.route('/')
