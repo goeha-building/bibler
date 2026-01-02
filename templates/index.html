@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>말씀 & 찬양 랜덤깡</title>
+    <style>
+        body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 80%; max-width: 500px; text-align: center; }
+        h1 { color: #2c3e50; font-size: 1.5rem; }
+        #verse { font-size: 1.2rem; color: #34495e; margin: 20px 0; min-height: 80px; }
+        #ref { font-weight: bold; color: #3498db; }
+        .btn { background: #3498db; color: white; border: none; padding: 12px 25px; border-radius: 30px; cursor: pointer; font-size: 1rem; transition: 0.3s; }
+        .btn:hover { background: #2980b9; }
+        .youtube-box { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>📖 오늘의 말씀 & 찬양</h1>
+        <div id="verse">버튼을 눌러 은혜를 받으세요!</div>
+        <p id="ref"></p>
+        
+        <button class="btn" onclick="getNext()">다음 말씀 & 찬양</button>
+
+        <div class="youtube-box">
+            <h3>🎵 오늘의 추천 찬송</h3>
+            <div id="player">
+                <p style="color:#888">말씀을 먼저 뽑아주세요.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 새로고침 없이 데이터를 가져오는 마법 (AJAX/Fetch)
+        async function getNext() {
+            const response = await fetch('/get_data');
+            const data = await response.json();
+            
+            document.getElementById('verse').innerText = `"${data.verse}"`;
+            document.getElementById('ref').innerText = `- ${data.ref}`;
+            
+            // 유튜브 영상 교체
+            const playerDiv = document.getElementById('player');
+            playerDiv.innerHTML = `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${data.youtube_id}" frameborder="0" allowfullscreen></iframe>`;
+        }
+    </script>
+</body>
+</html>
