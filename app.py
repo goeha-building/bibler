@@ -3,29 +3,41 @@ from flask import Flask, render_template, jsonify
 import requests
 import random
 
-# [수정포인트] 현재 파일이 있는 위치를 절대 경로로 잡아서 Flask한테 알려주기
 template_dir = os.path.abspath('templates')
 app = Flask(__name__, template_folder=template_dir)
 
-HYMN_LIST = ["M_Tj730I-vA", "8X8W9_vH2vA", "r-99uH9vC_w", "wM7id6NTo68"]
+# 찬송가 리스트 (형님이 좋아하는 유튜브 ID 더 추가해도 됨!)
+HYMN_LIST = [
+    "M_Tj730I-vA", # 은혜
+    "8X8W9_vH2vA", # 원하고 바라고 기도합니다
+    "r-99uH9vC_w", # 꽃들도
+    "wM7id6NTo68", # 손경민-행복
+    "3_vE7Y3R9l8"  # 시간을 뚫고
+]
 
 @app.route('/')
 def home():
-    # 여기서 에러나면 파일이 진짜 없는거임!
     return render_template('index.html')
 
 @app.route('/get_data')
 def get_data():
     try:
-        res = requests.get("https://bible-api.com/?random=verse")
-        bible_data = res.json()
+        # 한글 성경 API (대한성서공회 개역개정 느낌으로 가져오기)
+        # 0은 창세기, 1은 출애굽기... 랜덤으로 장/절을 가져오는 무료 API입니다.
+        res = requests.get("https://v0.bible/api/ko/gaesun/random")
+        data = res.json()
+        
         return jsonify({
-            "verse": bible_data['text'],
-            "ref": bible_data['reference'],
+            "verse": data['content'],
+            "ref": f"{data['book_name']} {data['chapter']}:{data['verse']}",
             "youtube_id": random.choice(HYMN_LIST)
         })
     except:
-        return jsonify({"verse": "데이터 가져오기 실패!", "ref": "ㅠㅠ", "youtube_id": ""})
+        return jsonify({
+            "verse": "마음이 지친 당신에게 평안이 있기를.",
+            "ref": "위로의 말씀 1:1",
+            "youtube_id": random.choice(HYMN_LIST)
+        })
 
 if __name__ == '__main__':
     app.run(debug=True)
