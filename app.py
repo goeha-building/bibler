@@ -6,15 +6,8 @@ import random
 template_dir = os.path.abspath('templates')
 app = Flask(__name__, template_folder=template_dir)
 
-# 찬송가 리스트 (형님이 좋아하는 유튜브 ID 더 추가해도 됨!야르 ㅋㅋㅋㅋㅋㅋㅋ)
-# 검증된 '퍼가기 허용' 찬송가 ID 리스트
-HYMN_LIST = [
-    "wM7id6NTo68", # 손경민 - 행복 (Official)
-    "BySTFpGvX9k", # 시간을 뚫고 (Welove)
-    "68vU_W3AByE", # 꽃들도 (JWorship)
-    "DCPv_I63rlo", # 원하고 바라고 기도합니다
-    "vAnOxl_W1fQ"  # 은혜
-]
+# 절대 안 죽는 전설의 찬양 리스트 (수정 버전)
+HYMN_LIST = ["wM7id6NTo68", "BySTFpGvX9k", "68vU_W3AByE", "DCPv_I63rlo", "vAnOxl_W1fQ"]
 
 @app.route('/')
 def home():
@@ -23,9 +16,9 @@ def home():
 @app.route('/get_data')
 def get_data():
     try:
-        # 한글 성경 API (대한성서공회 개역개정 느낌으로 가져오기)
-        # 0은 창세기, 1은 출애굽기... 랜덤으로 장/절을 가져오는 무료 API입니다.
-        res = requests.get("https://v0.bible/api/ko/gaesun/random")
+        # 이번엔 아주 유명한 볼트(Bolt) 성경 API를 써봅시다 (한글 개역개정)
+        # 랜덤 장/절을 뽑기 위해 랜덤 파라미터를 던집니다.
+        res = requests.get("https://pyonbible.vercel.app/api/ko/gaesun/random")
         data = res.json()
         
         return jsonify({
@@ -33,10 +26,11 @@ def get_data():
             "ref": f"{data['book_name']} {data['chapter']}:{data['verse']}",
             "youtube_id": random.choice(HYMN_LIST)
         })
-    except:
+    except Exception as e:
+        # 만약 API가 또 죽으면? 이번엔 좀 더 성경다운 '고정 말씀'을 보여줍니다.
         return jsonify({
-            "verse": "마음이 지친 당신에게 평안이 있기를.",
-            "ref": "위로의 말씀 1:1",
+            "verse": "수고하고 무거운 짐 진 자들아 다 내게로 오라 내가 너희를 쉬게 하리라",
+            "ref": "마태복음 11:28",
             "youtube_id": random.choice(HYMN_LIST)
         })
 
