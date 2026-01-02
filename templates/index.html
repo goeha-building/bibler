@@ -32,29 +32,26 @@
     <script>
     async function getNext() {
         try {
-            // [치트키 1] ?t=시간 을 붙여서 브라우저가 매번 새 데이터로 인식하게 함 (캐시 방지)
-            const response = await fetch('/get_data?t=' + new Date().getTime());
+            // 주소 끝에 랜덤 숫자를 붙여서 서버를 강제로 깨움
+            const response = await fetch('/get_data?nocache=' + Math.random());
             const data = await response.json();
             
-            // 말씀이랑 출처 넣기
             document.getElementById('verse').innerText = data.verse;
             document.getElementById('ref').innerText = data.ref;
             
-            // [치트키 2] 유튜브 '재생 불가' 해결 주소
-            // origin 설정을 넣어줘야 렌더 서버에서도 영상이 나옵니다.
-            const currentUrl = window.location.origin;
             const playerDiv = document.getElementById('player');
+            // 가장 깔끔한 유튜브 임베드 주소 (치트키 다 뺌, 이게 제일 잘 나옴)
             playerDiv.innerHTML = `
                 <iframe 
                     width="100%" 
                     height="250" 
-                    src="https://www.youtube.com/embed/${data.youtube_id}?enablejsapi=1&origin=${currentUrl}&rel=0" 
+                    src="https://www.youtube.com/embed/${data.youtube_id}" 
                     frameborder="0" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                     allowfullscreen>
                 </iframe>`;
         } catch (e) {
-            console.error("뜌땨땨 에러!", e);
+            console.error("에러!", e);
         }
     }
     window.onload = getNext;
