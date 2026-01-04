@@ -1,65 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>GOEHA BIBLER : 랜덤 말씀찬양</title>
-    <style>
-        body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 90%; max-width: 500px; text-align: center; }
-        h1 { color: #2c3e50; font-size: 1.5rem; margin-bottom: 30px; }
-        #verse { font-size: 1.3rem; color: #34495e; margin: 25px 0; min-height: 60px; line-height: 1.6; word-break: keep-all; }
-        #ref { font-weight: bold; color: #3498db; display: block; margin-bottom: 25px; }
-        .btn { background: #3498db; color: white; border: none; padding: 15px 30px; border-radius: 30px; cursor: pointer; font-size: 1.1rem; transition: 0.3s; font-weight: bold; }
-        .btn:hover { background: #2980b9; transform: scale(1.05); }
-        .youtube-box { margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; }
-        iframe { border-radius: 12px; background: #000; }
-    </style>
+    <title>BIBLE & HYMN</title>
 </head>
-<body>
-    <div class="card">
-        <h1>📖 오늘의 랜덤 성경깡</h1>
-        <div id="verse">버튼을 눌러 말씀을 뽑아보세요!</div>
-        <span id="ref"></span>
-        
-        <button class="btn" onclick="getNext()">✨ 말씀 & 찬양 뽑기</button>
+<body style="text-align:center; padding:50px;">
+    <h1>📖 Random Bible Verse</h1>
+    <div id="verse" style="margin:20px; font-size:20px;">Loading...</div>
+    <div id="ref" style="font-weight:bold; color:blue;"></div>
+    
+    <button onclick="location.reload()" style="padding:10px 20px; cursor:pointer;">Next Verse</button>
 
-        <div class="youtube-box">
-            <div id="player">
-                </div>
+    <div id="player" style="margin-top:30px;">
         </div>
-    </div>
 
     <script>
-        async function getNext() {
-            console.log("버튼 눌림! 데이터 가져오는 중...");
-            try {
-                // 캐시 방지를 위해 랜덤 파라미터 추가
-                const response = await fetch('/get_data?t=' + Date.now());
-                const data = await response.json();
-                console.log("받은 데이터:", data);
-                
-                // 1. 말씀/출처 업데이트
+        fetch('/get_data')
+            .then(res => res.json())
+            .then(data => {
                 document.getElementById('verse').innerText = data.verse;
-                document.getElementById('ref').innerText = "- " + data.ref;
-                
-                // 2. 유튜브 영상 업데이트 (가장 단순하고 강력한 주소)
-                const playerDiv = document.getElementById('player');
-                playerDiv.innerHTML = `
-                    <iframe 
-                        width="100%" 
-                        height="250" 
-                        src="https://www.youtube.com/embed/${data.youtube_id}?autoplay=0" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>`;
-            } catch (e) {
-                console.error("뜌땨땨 에러 발생:", e);
-                alert("서버 연결 실패! 다시 시도해주세요.");
-            }
-        }
-        // 시작하자마자 하나 뽑아주기
-        window.onload = getNext;
+                document.getElementById('ref').innerText = data.ref;
+                document.getElementById('player').innerHTML = `
+                    <iframe width="100%" height="300" 
+                    src="https://www.youtube.com/embed/${data.youtube_id}" 
+                    frameborder="0" allowfullscreen></iframe>`;
+            });
     </script>
 </body>
 </html>
